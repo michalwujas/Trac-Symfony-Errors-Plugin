@@ -1,0 +1,166 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <head>
+    <title>Błędy Systemu</title>
+    <style>
+    	tr.sf_error{
+    		cursor: pointer;
+    	}
+    	tr.description td
+    	{
+    		background: #fefefe;
+    	}
+
+	table.details{
+		background: #f7f7f0;
+		font-size: 8pt;
+	}
+	table.details th{
+		font-size: 12pt;
+		width: 200px;
+		cursor: pointer;
+	}
+
+	.section{
+		cursor: pointer;
+		font-size: 9pt;
+		color: black;
+	}
+
+	ul{
+		color: gray;
+	}
+
+	ul div > span
+	{
+		font-weight: bold;
+	}
+
+	tr.current td{
+		background: #f5f6f5;
+		border-bottom: 1px solid gray;
+	}
+
+	.listing div{
+		display: inline;
+	}
+
+	.listing li{
+		padding: 5px;
+	}
+
+	.messageBox{
+		background: #ffffd7;
+		border: 1px solid #a28f6c;
+		margin: 1em;
+		padding: 1em;
+	}
+
+
+    </style>
+  </head>
+
+  <body>
+    <div id="ctxtnav" class="nav"></div>
+
+    <div id="content" class="SymfonyError">
+      <h1>Błędy Systemu Redfox24</h1>
+      <div py:if="msg" class="messageBox">
+      	${msg}
+      </div>
+      <table class="listing">
+      <thead>
+      	<tr>
+      		<th>Ilość wystąpień</th>
+      		<th>Data ostatniego wystąpienia</th>
+      		<th>Moduł</th>
+      		<th>Akcja</th>
+      		<th>Komunikat o błędzie</th>
+      		<th>Adres</th>
+      		<th></th>
+      	</tr>
+      </thead>
+      <tbody>
+                <py:for each="error in sf_errors">
+                <tr class="sf_error">
+                <td>
+                	<b>${error["counter"]}</b>
+                </td>
+                <td>
+                	${error["created_at"]}
+                </td>
+                <td>
+                	${error["module_name"]}
+                </td>
+                <td>
+	                ${error["action_name"]}
+                </td>
+                <td>
+                	${error["message"]}
+          	</td>
+          	<td>
+          		${error["uri"]}
+          	</td>
+          	<td>
+          		<a href="/trac/bugs?delete_bug_id=${error['hash_key']}">Usuń podobne</a>
+          	</td>
+           	</tr>
+           	<tr class="description" style="display: none">
+           	  <div py:def="array_table(content)">
+           	      <py:choose test="">
+           	          <span py:when="isinstance(content, basestring)">
+           	               ${content}
+           	          </span>
+
+			  <ul py:when="isinstance(content, dict)">
+			  	<py:for each="key, detail in content.iteritems()">
+			  	<li>
+			  		<span class="section">${key}</span>
+			  		${array_table(detail)}
+			  	</li>
+			  	</py:for>
+			  </ul>	
+           	      </py:choose>
+           	  </div>
+           		<td colspan="6">
+           		<table class="details">
+           		<py:if test="error['request']"></py:if>
+           		<py:for each="desc, content in json.load(io(error['request'])).iteritems()">
+           		<tr>
+           			<th>${desc}</th>
+           			<td>${array_table(content)}</td>
+           		</tr>
+           		</py:for>
+           		</table>
+           		</td>
+           	</tr>
+           	</py:for>
+      </tbody>          
+      </table>    
+    </div>
+    <script>
+    	$('tr.sf_error').click(function(){
+	    	if($(this).hasClass('current'))
+	    	{
+	    		$(this).next().hide();
+	    		$(this).removeClass('current');
+	    	}
+	    	else
+	    	{
+	    		$(this).next().show();
+	    		$(this).addClass('current');
+	    	}
+	});
+
+	$('.details .section').next('div').find('ul').hide();
+
+	$('.details .section').click(function(){$(this).next('div').find('ul').toggle()});
+    </script>
+  </body>
+</html>
+

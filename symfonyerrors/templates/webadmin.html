@@ -1,0 +1,47 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/">
+  <xi:include href="admin.html" />
+  <head>
+    <title>Symfony Errors Settings</title>
+  </head>
+
+  <body>
+    <h2>Symfony Errors Settings</h2>
+    <form method="post">
+    <fieldset>
+    	<legend>Database access (external db where symfony error logs are stored) </legend>
+    	<div class="field">
+    		<label for="dbhost">Host</label><input type="text" name="dbhost" value="${settings['dbhost']}" />
+    	</div> 
+    	<div class="field">
+    		<label for="dbport">Port</label><input type="text" name="dbport" value="${settings['dbport']}" />
+    	</div>
+    	<div class="field">
+    		<label for="dbuser">User</label><input type="text" name="dbuser" value="${settings['dbuser']}" />
+    	</div>
+    	<div class="field">
+    		<label for="dbpasswd">Password</label><input type="text" name="dbpasswd" value="${settings['dbpasswd']}" />
+    	</div>
+    	<div class="field">
+    		<label for="dbname">Database name</label><input type="text" name="dbname" value="${settings['dbname']}" />
+    	</div>    	    	    	    	    	    	    	
+    </fieldset>
+    <fieldset>
+    	<legend>Interacting with trac</legend>
+    	<div class="field">
+    		<label for="default_ticket_owner">Default created ticket owner</label>
+    		<input type="text" name="default_ticket_owner" value="${settings['default_ticket_owner']}" />
+    	</div>    	    	    	    	    	    	    	
+    </fieldset>
+    
+    <div class="buttons">
+       <input type="submit" name="update" value="Update Settings" />
+    </div>        
+    </form>
+  </body>
+
+</html>
